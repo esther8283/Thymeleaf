@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>thymeleaf 사용하기</title>
+
+<!-- 기본설정 : 기존의 사용 방식대로 css, js 파일을 로드 -->
+<!-- th: 속성을 사용하여 처음 로드시에는 기본 속성을 화면에 출력하고 이후 th속성을 통하여 값을 변경 -->
+<link rel="stylesheet" href="/css/mystyle.css" th:href="@{/css/mystyle2.css}">
+<script src="/js/myscript.js" th:href="@{/js/myscript2.js}"></script>
+
+<link rel="stylesheet" href="/css/bootstrap.css" th:href="@{/css/bootstrap.css}">
+<script src="/js/jquery-3.5.1.js" th:src="@{/js/jquery-3.5.1.js}"></script>
+<script src="/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
+<script src="/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+
+
+</head>
+<body>
+	<!-- thymeleaf란 - thymeleaf는 일종의 자바 라이브러리로, 어플리케이션에 의해 생성된 Display Data나 
+	text를 표시하기 위해 -->
+	
+	<!-- 아래와 같은 jsp 코드를 사용했을 경우 웹브라우저는 처음에 화면에 출력할 내용이 없음, 빈화면이 출력됨 -->
+	<!-- <form:inputText name="userName" value="${user.name}" -->
+	
+	<!-- thymeleaf를 사용할 경우 기존의 디자인 영역의 데이터를 처음에 그대로 사용하고 서버와 
+	통신을 진행한 후 thymeleaf를 사용하여 데이터를 변경하여 표시할 수 있음 -->
+	<!-- <input type="text" name="userName" value="홍길동" th:value="${user.name}"> -->
+	<!-- 미리입력한 텍스트를 구분하기 위한 구분자는 공백문자 사용 불가 -->
+	
+	<h2>미리 생성된 외부 텍스트 출력하기</h2>
+	<h3 th:text="#{hello}">기존의 문장</h3>
+	<h3 th:text="#{name}">이름 적는 곳</h3>
+	<h3 th:text="#{age}">나이 적는 곳</h3>
+	<h3 th:text="#{gender}">성별 적는 곳</h3>
+	<h3 th:text="#{name.study}"></h3>
+	<h3 th:text="#{bye}"></h3>
+	
+	<!-- thymeleaf는 th 표현식을 사용하여 html의 속성값을 변경할 수 있음 -->
+	<!-- html의 모든 속성이 존재함 -->
+	
+	<!-- thymeleaf 표준 표현 구문 -->
+	<!-- 단순 표현식 -->	
+	<!-- ${...} - 변수 출력 -->
+	<p th:text="${data}"></p>
+	<p th:text="${hi}"></p>
+	<button th:text="${btnText}"></button>
+	<h4 th:text="${member.name}"></h4>
+	<h4 th:text="${member.email}"></h4>
+	<h4 th:text="${member.address}"></h4>
+	<h4 th:text="${member.tel}"></h4>
+
+	<!-- *{...} - 선택적 변수 출력 -->
+	<!-- #{...} - 메세지 출력, 외부 텍스트 출력 -->
+	<!-- @{...} - URL 링크 출력 -->
+	
+	<!-- 유틸리티 객체 표현 -->
+	<!-- https://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#appendix-b-expression.utility-objects  참고-->
+	<!-- #dates : java.util.Date 객체 -->
+	<!-- #calendars : Java.util.Calendars 객체 -->
+	<!-- #calendars.careateNow() : 날짜 객체 생성, 현재 날짜, 시간으로 생성 -->
+	<!-- #calendars.createToday() : 날짜 객체 생성, 오늘 날짜 시간은 00:00:00 로 생성  -->
+	<!-- #calendars.format() : 사용자가 지정한 형식대로 날짜 표현 -->
+		<p th:text="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></p>
+	
+	<!-- #numbers : 상수형 객체 -->
+	<!-- #strings : String 객체 -->
+	<!-- #bools : 참조형 객체 -->
+	<!-- #arrays : 배열 객체 -->
+	<!-- #lists : list 객체 -->
+	<!-- #lists.isEmpty(list) : 빈 리스트인지 확인 -->
+	<!-- #lists.sort(list) : 리스트 정렬 -->
+	<!-- #lists.contains(list, 항목) : 리스트에 지정한 항목이 포함되었는지 확인 -->
+	<!-- #maps : hashmap 객체 -->
+	<!-- #messages : #{...} 와 동일함 -->
+	<!-- #ids : 반복되는 id 속성 처리 -->
+	
+	<!-- controller 에서 Model 객체를 통해서 넘어오는 데이터 -->
+		<hr>
+		<h3>${} 형식으로 사용할 경우</h3>
+		<div>
+			<p th:text="${member.name}"></p>
+			<p th:text="${member.tel}"></p>
+			<p th:text="${member.email}"></p>
+			<p th:text="${member.address}"></p>
+		</div>
+		<hr>
+		<h3>*{} 형식으로 사용할 경우</h3>
+		<div th:object="${member}">
+			<p th:text="*{name}"></p>
+			<p th:text="*{tel}"></p>
+			<p th:text="*{email}"></p>
+			<p th:text="*{address}"></p>
+		</div>
+	
+	<!-- #{...} - 메세지 출력, 외부 텍스트 출력 -->
+	
+	<!-- @{...} - URL 링크 출력 -->
+	<!-- th:문법을 사용하여 링크 주소를 입력할 수 있음 -->
+	<!-- css, js, 컨텐츠의 링크에 사용 -->
+	<!-- th:href 속성은 수정속성, html이 처음 로드될 때는 기본 속성을 사용하여 화면에 출력하고,
+	그 이후에 th속성을 사용하여 수정된 내용을 반영 -->
+	<!-- URL 에 문자열 연산자 및 변수를 사용하여 전체 경로를 표현할 수 있음 -->
+	<!-- URL 입력 부분에 확장자 html 부분을 생략 가능 -->
+	<a class="btn btn-primary" href="/test/test.html" th:href="@{/test/test}">test.html로 이동</a>
+	<a class="btn btn-primary" href="/test/test.html" th:href="@{'/test/' +${url}}">test.html로 이동2</a>
+	
+	<!-- 리터럴 -->
+	<!-- 문자열 리터럴 : ' ' 사이에 텍스트 삽입 -->
+	<p th:test="'문자열 리터럴 출력'"></p>
+	<p th:test="'문자열' + '리터럴' + '출력'"></p>
+	<!-- 숫자 리터럴 : 1, 2, 3, 4 입력 -->
+	<p th:text="100"></p>
+	<!-- 숫자 리터널 사용 시 연산이 가능함 -->
+	<p th:text="100 + 200"></p>
+	<!-- 문자와 숫자 리터널을 연산 시 리터널 대체 연산자를 사용해야 함 -->
+	<p th:text="'100' + 200 + ''"></p>
+	<!-- 논리형 리터럴 : true, false -->
+	<p th:text="true"></p>
+	
+	<!-- 텍스트 연산 -->
+	<!-- + : 문자열 연결 연산자 -->
+	<!-- | ... | : 리터럴 대체, | 문자열... ${변수명} | -->
+	<!-- th:text=" '문자열' + ${string} " 대신 th:text="|문자열${string}| 형태로 사용할 수 있음-->
+	<p th:text="'hello world'"></p>
+	<p th:text="'hello ' + ${w} + '!!'"></p>
+	<p th:text="|hello ${w}!!|"></p>
+	
+	<!-- 산술 연산 -->
+	<!-- +, -, *, /, % : 기본적인 산술 연산자 -->
+	
+	<!-- 논리 연산 -->
+	<!-- and, or, not, ! -->
+	
+	<!-- 비교 연산 -->
+	<!-- >, <, >=, <=, ==, != -->
+	
+	<!-- 조건 연산 -->
+	<!-- if문 : (if) ? (then)  -->
+	<!-- if ~ else 문 : (if) ? (then) : (else) -->
+	<p th:class="${flag} ? 'blue' : 'red'" th:text="${flag} ? '파랑색' : '빨강색'"></p>
+	
+	<!-- 속성 값 변경하기 -->
+	<!-- th:attr 속성을 사용하여 지정한 속성값을 변경할 수 있음 -->
+	<!-- th:attr 속성을 사용 시 여러가지 속성을 한번에 입력 할 수 있음 -->
+	<!-- th:html 속성명 사용하는 방법도 가능함 -->
+	
+	<h4>기본값</h4>
+	<h4 th:attr="class=${btnPrimary}">th:attr을 사용하여 클래스 변경</h4>
+	<h4 th:class="${btnPrimary}">th:class를 사용하여 클래스 변경</h4>
+	<br>
+	<a th:attr="href=#{a.href}, target=#{a.target}" th:text="#{a.text}" th:class="'btn btn-primary'"></a>
+	<!-- <a th:attr="href='http://www.daum.net', target='_blank', text='다음홈페이지', class='btn btn-primary'"></a> -->
+	<a th:href="'http://www.daum.net'" th:target="'_blank'" th:text="'다음홈페이지'"></a>
+	
+	
+	<!-- append, prepend 사용하기 -->
+	<!-- th:attr과 비슷한 방식으로 동작되는 th:attrappend, th:attrprepend 속성을 제공함 -->
+	<!-- 기존의 속성에 이어서 다양한 값을 적용할 수 있음, 기존의 속성을 덮어쓰기하지 않음 -->
+	<button type="button" disabled>기본 버튼 모양</button>
+	<button type="button" class="btn">부트스트랩 기본 버튼 모양</button>
+	<button type="button" class="btn" th:attrappend="class=' btn-primary'" th:disabled="true">th:attrappend를 사용하여 클래스를 추가</button>
+	
+	<!-- 고정값 논리형 속성 -->
+	<!-- html 속성에는 속성값이 없는 형태로 속성명만 입력 시 효과가 적용되는 속성이 존재함 -->
+	
+	<!-- 이러한 속성명의 유무로 인하여 효과가 적용되는 속성에 대한 값을 설정을 th를 사용하여 가능함 -->
+	<hr>
+	<div class="container">
+		<input type="checkbox" name="opt1" value="짜장면" checked>짜장면
+		<input type="checkbox" name="opt2" value="짬뽕" th:checked="${chk}">짬뽕
+	</div>
+	
+	<!-- 반복문 사용 -->
+	<!-- th:each 속성을 사용하여 반복문을 사용할 수 있도록 함 -->
+	<!-- th:each 속성은 tr, td를 사용하는 table에서 사용할 수 있음 -->
+	<!-- th:each="밑에서 사용되는 변수명 : ${서버에서 전송한 객체명}"  -->
+	<hr>
+	<div class="container">
+		<table class="table table-hover table-striped">
+			<tr th:each="item : ${datas}">
+				<td th:text="${item.name}"></td>
+				<td th:text="${item.email}"></td>
+				<td th:text="${item.tel}"></td>
+				<td th:text="${item.address}"></td>
+			</tr>
+		</table>
+		
+		<hr>
+		
+		<!-- th:object를 사용하여 *{} 방식 사용 -->
+		<table class="table table-hover table-striped">
+			<tr th:each="item : ${datas}" th:object="${item}">
+				<td th:text="${item.name}"></td>
+				<td th:text="${item.email}"></td>
+				<td th:text="${item.tel}"></td>
+				<td th:text="${item.address}"></td>
+			</tr>
+		</table>
+	</div>
+	
+	<!-- 단순 조건문 if/unless -->
+	<!-- th:if 속성을 사용하여 특정 부분만 화면에 출력하도록 설정 -->
+	<!-- 조건문이 true일 경우 자식 태그 부분을 출력함 -->
+	<!-- 단순 if 문 형태이기 때문에 else부분이 존재하지 않음 -->
+	<!-- else대신 th:unless를 사용하여 같은 조건을 질의함 -->
+	<!-- th:unless 는 조건문이 false일 경우 자식 태그 부분을 출력함 -->
+	<!-- if ~ else문 형태로 사용하고자 하면 th:if 부분과 th:unless부분을 모두 구현해야 함 -->
+	<div class="container">
+		<table class="table table-hover table-striped">
+			<thead>
+				<tr>
+					<th>이름</th>
+					<th>이메일</th>
+					<th>전화번호</th>
+					<th>주소</th>
+				</tr>
+			</thead>
+			<tbody>
+			<!-- #lists를 선언 시 controller에서 수신된 데이터 list 객체를 받아서 사용할 수 있음 -->
+				<tr th:if="${#lists.size(datas)} > 0" th:each="item : ${datas}">
+					<td th:text="${item.name}"></td>
+					<td th:text="${item.email}"></td>
+					<td th:text="${item.tel}"></td>
+					<td th:text="${item.address}"></td>
+				</tr>
+				<tr th:unless="${#lists.size(datas)} > 0">
+					<td colspan="4" th:text="'내용이 비었습니다.'"></td>
+				</tr>
+			</tbody>
+		</table>
+		<table class="table table-hover table-striped">
+			<thead>
+				<tr>
+					<th>이름</th>
+					<th>이메일</th>
+					<th>전화번호</th>
+					<th>주소</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:if="${#lists.size(datas)} > 0" th:each="item : ${datas}" th:object=${item}>
+					<td th:text="*{name}"></td>
+					<td th:text="*{email}"></td>
+					<td th:text="*{tel}"></td>
+					<td th:text="*{address}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<!-- inline 방식 사용하기 -->
+	<!-- thymeleaf 사용 중 특정 태그 내부에 사용할 경우 혹은 자바스크립트에 
+	thymeleaf를 사용해야 할 경우 inline 방식을 사용하면 쉽게 표현 가능함 -->
+	<!-- [[ ]] 안에 thymeleaf 속성을 사용하면 됨 -->
+	<!-- inline 방식은 화면에 바로 표현되지 않기 때문에 서버와 통신이 없을 경우 홤녀에 원하는 형태로 출력되지 않음 -->
+	<div class="container">
+		<h4>안녕하세요, 기존방식의 <span th:text="${data}"></span>입니다.</h4>
+		<h4>안녕하세요, inline 방식의 [[${data}]] 입니다.</h4>
+	</div>
+	
+	<!-- 자바스크립트에서도 inline 방식을 사용 시 데이터를 자바스크립트에 전송할 수 있음 -->
+	<!-- 
+	
+		<script th:inline="javascript>
+		/*	<![CDATA[ */ 주석 부분이 빠져도 상관없이 동작함/웹브라우저에서 파일을 직접 열경우 오류 발생
+		
+				// 주석으로 감싸진 thymeleaf thymeleaf 데이터가 포함되어 출력됨
+				var user = /* [[${datas}]] */ null; // 웹 브라우저에서 직접 열 경우 Null 값이 출력됨
+				var user = [[${datas}]]; // 웹 브라우저에서 직접 열 경우 오류 발생
+				
+		/*	]]> */	
+		</script>
+	
+	-->
+	
+	
+	
+	<br><br><br><br><br><br><br><br>
+</body>
+</html>
